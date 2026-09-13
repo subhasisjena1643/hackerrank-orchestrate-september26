@@ -1,0 +1,1 @@
+"""Spending-change candidate module."""

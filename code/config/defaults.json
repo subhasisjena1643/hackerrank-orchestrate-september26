@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "evidence": {
+    "schema_version": "1.0.0",
+    "message_prompt_version": "message-evidence-v1",
+    "image_prompt_version": "image-evidence-v1",
+    "provider_environment_variable": "EVIDENCE_PROVIDER",
+    "text_model_environment_variable": "EVIDENCE_TEXT_MODEL",
+    "vision_model_environment_variable": "EVIDENCE_VISION_MODEL",
+    "cache_schema_version": "1.0.0"
+  },
+  "telemetry": {
+    "schema_version": "1.0.0",
+    "pricing_schema_version": "1.0.0"
+  }
+}

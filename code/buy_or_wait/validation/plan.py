@@ -1,0 +1,1 @@
+"""Payment plan validation module."""

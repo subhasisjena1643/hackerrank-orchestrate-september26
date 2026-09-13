@@ -1,0 +1,1 @@
+"""Output validation entry point."""
