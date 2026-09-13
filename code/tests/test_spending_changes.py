@@ -85,8 +85,7 @@ def event(
 
 def inputs(*, flexibility=Flexibility.REDUCIBLE_OR_STOPPABLE, floor="40.00"):
     events = tuple(
-        event(f"e{i}", i, flexibility=flexibility, floor=floor)
-        for i in (1, 2, 3)
+        event(f"e{i}", i, flexibility=flexibility, floor=floor) for i in (1, 2, 3)
     )
     resolved = resolve_event_lifecycles(
         events, snapshot_date=REQUEST, home_currency=Currency.USD
@@ -214,8 +213,7 @@ def test_one_to_three_limit_no_duplicate_target_and_same_event_conflict():
     )
     assert {len(candidate.changes) for candidate in candidates} == {1, 2, 3}
     assert all(
-        len({item.event_id for item in candidate.changes})
-        == len(candidate.changes)
+        len({item.event_id for item in candidate.changes}) == len(candidate.changes)
         for candidate in candidates
     )
     with pytest.raises(SpendingChangeValidationError, match="one to three"):
@@ -294,16 +292,13 @@ def test_forecast_savings_apply_only_to_future_series_occurrences():
         policy=BASELINE_POLICY,
         changes=change,
     )
-    assert (
-        changed.ledger[-1].closing_balance - baseline.ledger[-1].closing_balance
-        == Decimal("180.00")
-    )
+    assert changed.ledger[-1].closing_balance - baseline.ledger[
+        -1
+    ].closing_balance == Decimal("180.00")
     generated = generate_spending_change_candidates(
         profile(stop=()), series, resolved, request_date=REQUEST
     )
-    assert all(
-        item.effective_from == REQUEST for item in generated[0].verified_changes
-    )
+    assert all(item.effective_from == REQUEST for item in generated[0].verified_changes)
 
 
 def test_generated_actions_include_all_solved_change_examples_without_ids_or_labels():
@@ -320,9 +315,7 @@ def test_generated_actions_include_all_solved_change_examples_without_ids_or_lab
         request = requests[expected.request_id]
         user_profile = profiles[request.user_id]
         events = tuple(
-            item
-            for item in dataset.financial_events
-            if item.user_id == request.user_id
+            item for item in dataset.financial_events if item.user_id == request.user_id
         )
         resolved = resolve_event_lifecycles(
             events,

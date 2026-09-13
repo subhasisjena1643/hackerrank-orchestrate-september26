@@ -63,10 +63,23 @@ def request(*, partial=True, deadline=TODAY + timedelta(days=90)):
 
 def profile(*, balance="250", methods=None, months=4):
     return Profile(
-        "u", Currency.USD, Decimal(balance), Decimal("20"), (), (), ("fun",),
+        "u",
+        Currency.USD,
+        Decimal(balance),
+        Decimal("20"),
+        (),
+        (),
         ("fun",),
-        tuple(methods or (PaymentMethod.FULL_PAYMENT, PaymentMethod.PARTIAL_PAYMENT,
-                          PaymentMethod.INSTALLMENTS)), months,
+        ("fun",),
+        tuple(
+            methods
+            or (
+                PaymentMethod.FULL_PAYMENT,
+                PaymentMethod.PARTIAL_PAYMENT,
+                PaymentMethod.INSTALLMENTS,
+            )
+        ),
+        months,
     )
 
 
@@ -75,9 +88,7 @@ def flow(flow_id, when, amount, direction=Direction.CREDIT, sources=()):
         "u",
         direction,
         "salary" if direction is Direction.CREDIT else "fun",
-        EventType.INCOME
-        if direction is Direction.CREDIT
-        else EventType.EXPENSE,
+        EventType.INCOME if direction is Direction.CREDIT else EventType.EXPENSE,
         Currency.USD,
         Flexibility.FIXED,
         flow_id,
@@ -144,8 +155,12 @@ def generate(
 ):
     req, prof = req or request(), prof or profile()
     return generate_candidate_plans(
-        request=req, profile=prof, baseline=baseline(req, prof, flows),
-        payment_options=options, cash_flows=flows, policy=BASELINE_POLICY,
+        request=req,
+        profile=prof,
+        baseline=baseline(req, prof, flows),
+        payment_options=options,
+        cash_flows=flows,
+        policy=BASELINE_POLICY,
         spending_change_candidates=changes,
         recurring_series=series,
         resolved_events=resolved,
@@ -255,15 +270,17 @@ def test_full_now_with_changes_replays_and_keeps_baseline_safe_amount():
 
 @pytest.mark.parametrize(
     ("allows", "accepted", "safe", "expected"),
-    [(False, True, "50", False), (True, False, "50", False),
-     (True, True, "0", False), (True, True, "100", False)],
+    [
+        (False, True, "50", False),
+        (True, False, "50", False),
+        (True, True, "0", False),
+        (True, True, "100", False),
+    ],
 )
 def test_partial_eligibility_boundaries(allows, accepted, safe, expected):
     req = request(partial=allows)
     accepted_methods = (
-        (PaymentMethod.PARTIAL_PAYMENT,)
-        if accepted
-        else (PaymentMethod.FULL_PAYMENT,)
+        (PaymentMethod.PARTIAL_PAYMENT,) if accepted else (PaymentMethod.FULL_PAYMENT,)
     )
     prof = profile(balance=str(Decimal(safe) + 20), methods=accepted_methods)
     assert (PaymentMethod.PARTIAL_PAYMENT in methods(generate(req, prof))) is expected
@@ -284,9 +301,7 @@ def test_partial_deadline_equality_exact_two_payment_sum_and_replay():
     )
     assert sum((p.amount for p in partial.payments), Decimal(0)) == req.requested_amount
     assert partial.replay.is_safe
-    missed = replace(
-        req, desired_completion_date=payday - timedelta(days=1)
-    )
+    missed = replace(req, desired_completion_date=payday - timedelta(days=1))
     assert PaymentMethod.PARTIAL_PAYMENT not in methods(
         generate(missed, prof, (credit,))
     )
@@ -350,17 +365,11 @@ def test_installment_preference_request_max_term_total_and_deadline_boundaries()
         generate(prof=profile(months=None), options=(opt,))
     )
     wrong_request = replace(opt, request_id="request_2")
-    assert PaymentMethod.INSTALLMENTS not in methods(
-        generate(options=(wrong_request,))
-    )
+    assert PaymentMethod.INSTALLMENTS not in methods(generate(options=(wrong_request,)))
     wrong_total = replace(opt, total_payable_amount=Decimal("109"))
-    assert PaymentMethod.INSTALLMENTS not in methods(
-        generate(options=(wrong_total,))
-    )
+    assert PaymentMethod.INSTALLMENTS not in methods(generate(options=(wrong_total,)))
     wrong_fee = replace(opt, financing_fee=Decimal("9"))
-    assert PaymentMethod.INSTALLMENTS not in methods(
-        generate(options=(wrong_fee,))
-    )
+    assert PaymentMethod.INSTALLMENTS not in methods(generate(options=(wrong_fee,)))
     late = replace(opt, first_payment_date=TODAY + timedelta(days=61))
     assert PaymentMethod.INSTALLMENTS not in methods(generate(options=(late,)))
     equality = replace(opt, first_payment_date=TODAY + timedelta(days=60))
@@ -450,12 +459,8 @@ def test_wait_eligibility_and_no_optional_changes():
     assert not wait.spending_changes
     missed = replace(req, desired_completion_date=payday - timedelta(days=1))
     assert PaymentMethod.WAIT not in methods(generate(missed, prof, (credit,)))
-    partial_only = profile(
-        balance="70", methods=(PaymentMethod.PARTIAL_PAYMENT,)
-    )
-    assert PaymentMethod.WAIT not in methods(
-        generate(req, partial_only, (credit,))
-    )
+    partial_only = profile(balance="70", methods=(PaymentMethod.PARTIAL_PAYMENT,))
+    assert PaymentMethod.WAIT not in methods(generate(req, partial_only, (credit,)))
 
 
 def ranked_candidate(

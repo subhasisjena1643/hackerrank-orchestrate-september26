@@ -175,9 +175,7 @@ def verify_spending_changes(
             )
         category = _category(source.category)
         if category in protected:
-            raise SpendingChangeValidationError(
-                f"{source.category} is protected"
-            )
+            raise SpendingChangeValidationError(f"{source.category} is protected")
         if change.change_type is SpendingChangeType.STOP:
             if change.new_amount is not None:
                 raise SpendingChangeValidationError("stop cannot specify new_amount")

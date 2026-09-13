@@ -242,13 +242,13 @@ def generate_candidate_plans(
         request.requested_amount,
     )
     add(full_now, AffordabilityStatus.AFFORDABLE_NOW)
-    for variant in change_variants:
+    for change_variant in change_variants:
         add(
             CandidatePlan(
                 PaymentMethod.FULL_PAYMENT,
                 full_now.payments,
                 request.requested_amount,
-                tuple(variant.changes),
+                tuple(change_variant.changes),
             ),
             AffordabilityStatus.AFFORDABLE_WITH_PLAN,
         )
@@ -288,8 +288,12 @@ def generate_candidate_plans(
             schedule = build_installment_schedule(option)
         except PlanEligibilityError:
             continue
-        for variant in installment_variants:
-            changes = () if variant is None else tuple(variant.changes)
+        for installment_variant in installment_variants:
+            changes = (
+                ()
+                if installment_variant is None
+                else tuple(installment_variant.changes)
+            )
             add(
                 CandidatePlan(
                     PaymentMethod.INSTALLMENTS,
@@ -365,9 +369,11 @@ def _verify_partial(
         Payment(request.request_date, safe),
         Payment(earliest, request.requested_amount - safe),
     )
-    if candidate.payments != expected or sum(
-        (item.amount for item in candidate.payments), Decimal(0)
-    ) != request.requested_amount:
+    if (
+        candidate.payments != expected
+        or sum((item.amount for item in candidate.payments), Decimal(0))
+        != request.requested_amount
+    ):
         raise PlanEligibilityError("partial plan must be the exact two-payment split")
     if earliest > request.desired_completion_date:
         raise PlanEligibilityError("partial plan misses the completion deadline")
