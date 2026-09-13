@@ -179,6 +179,174 @@ def test_variable_descriptions_form_one_category_series_but_one_off_does_not():
     assert series[0].source_event_ids == ("g0", "g1", "g2")
 
 
+def test_two_independent_salaries_in_same_category_remain_separate():
+    rows = []
+    for month in (1, 2, 3):
+        rows.extend(
+            (
+                event(
+                    f"primary-{month}",
+                    date(2026, month, 15),
+                    "1000",
+                    description="Primary household salary",
+                    category="salary",
+                    direction=Direction.CREDIT,
+                    kind=EventType.INCOME,
+                ),
+                event(
+                    f"second-{month}",
+                    date(2026, month, 20),
+                    "400",
+                    description="Second household income",
+                    category="salary",
+                    direction=Direction.CREDIT,
+                    kind=EventType.INCOME,
+                ),
+            )
+        )
+    series = infer_recurrence_series(
+        resolved(rows), request_date=REQUEST, policy=BASELINE_POLICY
+    )
+    assert len(series) == 2
+    assert {item.key.description_family for item in series} == {
+        "salary:primary household",
+        "salary:second household",
+    }
+
+
+def test_final_payroll_terminates_supported_recurrence():
+    rows = [
+        event(
+            f"salary-{month}",
+            date(2026, month, 15),
+            description="Final employer payroll" if month == 3 else "Payroll credit",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+        )
+        for month in (1, 2, 3)
+    ]
+    assert not infer_recurrence_series(
+        resolved(rows), request_date=REQUEST, policy=BASELINE_POLICY
+    )
+
+
+def test_one_time_irregular_gig_income_does_not_join_payroll_series():
+    rows = [
+        event(
+            f"salary-{month}",
+            date(2026, month, 15),
+            description="Payroll credit",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+        )
+        for month in (1, 2, 3)
+    ]
+    rows.append(
+        event(
+            "gig",
+            date(2026, 3, 22),
+            "250",
+            description="Task marketplace payout",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+        )
+    )
+    series = infer_recurrence_series(
+        resolved(rows), request_date=REQUEST, policy=BASELINE_POLICY
+    )
+    assert len(series) == 1
+    assert series[0].source_event_ids == ("salary-1", "salary-2", "salary-3")
+
+
+def test_isolated_salary_amount_is_one_occurrence_not_new_series_base():
+    amounts = ("1000", "1000", "600")
+    rows = [
+        event(
+            f"salary-{month}",
+            date(2026, month, 15),
+            amounts[month - 1],
+            description="Payroll credit",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+        )
+        for month in (1, 2, 3)
+    ]
+    series = infer_recurrence_series(
+        resolved(rows), request_date=REQUEST, policy=BASELINE_POLICY
+    )[0]
+    assert series.projected_amount == Decimal("1000.00")
+
+
+def test_confirmed_first_and_next_salary_establish_supported_cadence():
+    rows = [
+        event(
+            "first",
+            date(2026, 3, 15),
+            "600",
+            description="Prorated first salary",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+        ),
+        event(
+            "next",
+            date(2026, 4, 15),
+            "1000",
+            description="Next confirmed salary",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+            status=EventStatus.SCHEDULED,
+        ),
+    ]
+    series = infer_recurrence_series(
+        resolved(rows), request_date=REQUEST, policy=BASELINE_POLICY
+    )[0]
+    projected = project_recurrence_series(
+        series, start_date=REQUEST, end_date=date(2026, 5, 31), policy=BASELINE_POLICY
+    )
+    assert [(item.flow_date, item.amount) for item in projected] == [
+        (date(2026, 4, 15), Decimal("1000.00")),
+        (date(2026, 5, 15), Decimal("1000.00")),
+    ]
+
+
+def test_resumed_salary_restarts_at_effective_occurrence_without_backfill():
+    rows = [
+        event(
+            f"salary-{month}",
+            date(2026, month, 15),
+            description="Payroll credit",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+        )
+        for month in (1, 2, 3)
+    ]
+    rows.append(
+        event(
+            "resume",
+            date(2026, 6, 15),
+            description="Confirmed resumed salary",
+            category="salary",
+            direction=Direction.CREDIT,
+            kind=EventType.INCOME,
+            status=EventStatus.SCHEDULED,
+        )
+    )
+    series = infer_recurrence_series(
+        resolved(rows), request_date=REQUEST, policy=BASELINE_POLICY
+    )[0]
+    projected = project_recurrence_series(
+        series, start_date=REQUEST, end_date=date(2026, 7, 31), policy=BASELINE_POLICY
+    )
+    assert [item.flow_date for item in projected] == [date(2026, 7, 15)]
+
+
 def test_fixed_recurring_bill_uses_latest_authoritative_amount() -> None:
     rows = [
         event(f"r{i}", date(2026, i, 15), amount, description="Rent", category="rent")

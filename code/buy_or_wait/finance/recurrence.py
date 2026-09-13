@@ -138,6 +138,19 @@ _NOISE = re.compile(
     r"\b(?:payment|purchase|transaction|transfer|monthly|weekly|regular|confirmed|plan|service)\b",
     re.I,
 )
+_SALARY_GENERIC_WORDS = re.compile(
+    r"\b(?:final|last|next|confirmed|first|prorat(?:ed|a)|temporary|reduced|"
+    r"resumed|restored|employer|payroll|salary|income|credit)\b",
+    re.I,
+)
+_SERIES_END_WORDS = re.compile(r"\b(?:final|last)\b.*\b(?:payroll|salary)\b", re.I)
+_SERIES_RESTART_WORDS = re.compile(
+    r"\b(?:resumed|restored|restarted)\b.*\b(?:payroll|salary)\b", re.I
+)
+_SALARY_OCCURRENCE_WORDS = re.compile(
+    r"\b(?:first|prorat(?:ed|a)|temporary|final|last|resumed|restored|restarted)\b",
+    re.I,
+)
 _NON_ALNUM = re.compile(r"[^a-z]+")
 _EXCLUDED_REASONS = frozenset(
     {
@@ -154,7 +167,15 @@ _EXCLUDED_REASONS = frozenset(
 def semantic_description_family(description: str, category: str) -> str:
     """Return a stable family without collapsing unrelated one-off categories."""
     category_key = category.strip().casefold()
-    if category_key in _VARIABLE_CATEGORY_FAMILIES | _CATEGORY_FAMILIES:
+    if category_key in _VARIABLE_CATEGORY_FAMILIES:
+        return f"category:{category_key}"
+    if category_key == "salary":
+        clean = _NON_ALNUM.sub(
+            " ", _SALARY_GENERIC_WORDS.sub(" ", description.casefold())
+        )
+        words = tuple(word for word in clean.split() if len(word) > 2)
+        return "salary:" + (" ".join(words[:5]) if words else "default")
+    if category_key in _CATEGORY_FAMILIES:
         return f"category:{category_key}"
     clean = _NON_ALNUM.sub(" ", _NOISE.sub(" ", description.casefold()))
     words = tuple(word for word in clean.split() if len(word) > 2)
@@ -177,9 +198,14 @@ def infer_recurrence_series(
     )
     grouped: dict[SeriesKey, list[RecurrenceObservation]] = {}
     all_rows: dict[SeriesKey, list[ResolvedEvent]] = {}
+    confirmed_anchors: dict[SeriesKey, set[str]] = {}
     for row in resolved_events:
         event = row.source_event
-        if not _eligible(row, request_date, facts_by_event.get(event.event_id, ())):
+        is_history = _eligible(
+            row, request_date, facts_by_event.get(event.event_id, ())
+        )
+        is_anchor = _confirmed_series_anchor(row, request_date)
+        if not is_history and not is_anchor:
             continue
         key = SeriesKey(
             event.user_id,
@@ -207,14 +233,23 @@ def infer_recurrence_series(
             )
         )
         all_rows.setdefault(key, []).append(row)
+        if is_anchor:
+            confirmed_anchors.setdefault(key, set()).add(event.event_id)
 
     result: list[RecurringSeries] = []
     for key, raw in grouped.items():
         observations = _dedupe_dates(raw)
         cadence_info = detect_cadence(tuple(item.when for item in observations))
+        if cadence_info is None and confirmed_anchors.get(key):
+            cadence_info = _detect_confirmed_pair(
+                tuple(item.when for item in observations)
+            )
         if cadence_info is None:
             continue
         cadence, interval, anchor_day, month_end = cadence_info
+        historical = tuple(item for item in observations if item.when < request_date)
+        if not historical:
+            continue
         amendments = _amendments(
             (
                 *global_facts,
@@ -224,10 +259,12 @@ def infer_recurrence_series(
                     for fact in facts_by_event.get(row.event_id, ())
                 ),
             ),
-            observations[-1].when,
+            historical[-1].when,
             key,
         )
-        if _series_ended(amendments, request_date):
+        if _series_ended(amendments, request_date) or _description_ends_series(
+            historical[-1].description
+        ):
             continue
         variable = key.category in _VARIABLE_CATEGORY_FAMILIES or (
             key.category not in _CATEGORY_FAMILIES
@@ -244,15 +281,24 @@ def infer_recurrence_series(
         amount = (
             estimate_amount((item.amount for item in history), selected_policy)
             if variable
-            else _round(observations[-1].amount, selected_policy)
+            else _fixed_projected_amount(observations, key, selected_policy)
         )
+        latest_date = historical[-1].when
+        future_restarts = tuple(
+            item
+            for item in observations
+            if item.when >= request_date
+            and _description_restarts_series(item.description)
+        )
+        if future_restarts:
+            latest_date = future_restarts[-1].when
         result.append(
             RecurringSeries(
                 key,
                 cadence,
                 observations,
                 amount,
-                observations[-1].when,
+                latest_date,
                 anchor_day,
                 month_end,
                 interval,
@@ -319,6 +365,29 @@ def detect_cadence(
     _, _, cadence = max(candidates)
     supported = [delta for delta in deltas if abs(delta - cadence.nominal_days) <= 1]
     return cadence, round(median(supported)), None, False
+
+
+def _detect_confirmed_pair(
+    dates: Sequence[date],
+) -> tuple[Cadence, int, int | None, bool] | None:
+    """Allow one explicit confirmed occurrence to complete cadence support."""
+    ordered = tuple(sorted(set(dates)))
+    if len(ordered) != 2:
+        return None
+    first, second = ordered
+    month_gap = (second.year * 12 + second.month) - (first.year * 12 + first.month)
+    if month_gap == 1 and (
+        (_is_month_end(first) and _is_month_end(second))
+        or abs(first.day - second.day) <= 2
+    ):
+        month_end = _is_month_end(first) and _is_month_end(second)
+        anchor = monthrange(second.year, second.month)[1] if month_end else second.day
+        return Cadence.MONTHLY, (second - first).days, anchor, month_end
+    gap = (second - first).days
+    for cadence in (Cadence.WEEKLY, Cadence.BIWEEKLY, Cadence.THREE_WEEK):
+        if abs(gap - cadence.nominal_days) <= 1:
+            return cadence, gap, None, False
+    return None
 
 
 def project_recurrence_series(
@@ -405,7 +474,10 @@ def _eligible(
             EventType.INVESTMENT_VALUATION,
         }
         or event.category.casefold() in _ONE_OFF_CATEGORIES
-        or _ONE_OFF_WORDS.search(text)
+        or (
+            _ONE_OFF_WORDS.search(text)
+            and not (_is_salary(event) and _SALARY_OCCURRENCE_WORDS.search(text))
+        )
     ):
         return False
     items = tuple(_item(fact) for fact in facts)
@@ -413,6 +485,59 @@ def _eligible(
         return False
     first = [item for item in items if item.fact_type == "first_salary_confirmed"]
     return not first or any(item.recurrence_scope == "recurring" for item in first)
+
+
+def _is_salary(event: object) -> bool:
+    return (
+        getattr(event, "direction", None) is Direction.CREDIT
+        and getattr(event, "event_type", None) is EventType.INCOME
+        and str(getattr(event, "category", "")).casefold() == "salary"
+    )
+
+
+def _confirmed_series_anchor(row: ResolvedEvent, request_date: date) -> bool:
+    event = row.source_event
+    return (
+        _is_salary(event)
+        and row.disposition is ResolutionDisposition.PROJECTED_CASH_FLOW
+        and row.reason_code is ResolutionReason.CONFIRMED_SALARY
+        and row.cash_flow_date is not None
+        and row.cash_flow_date >= request_date
+        and row.amount_home_currency is not None
+    )
+
+
+def _description_ends_series(description: str) -> bool:
+    return bool(_SERIES_END_WORDS.search(description))
+
+
+def _description_restarts_series(description: str) -> bool:
+    return bool(_SERIES_RESTART_WORDS.search(description))
+
+
+def _fixed_projected_amount(
+    observations: Sequence[RecurrenceObservation],
+    key: SeriesKey,
+    policy: ForecastPolicy,
+) -> Decimal:
+    """Keep isolated payroll deviations occurrence-scoped, otherwise use latest."""
+    if not (
+        key.direction is Direction.CREDIT
+        and key.event_type is EventType.INCOME
+        and key.category.casefold() == "salary"
+    ):
+        return _round(observations[-1].amount, policy)
+    counts: dict[Decimal, int] = {}
+    for item in observations:
+        counts[item.amount] = counts.get(item.amount, 0) + 1
+    highest = max(counts.values())
+    modes = {amount for amount, count in counts.items() if count == highest}
+    amount = (
+        next(iter(modes))
+        if highest >= 2 and len(modes) == 1
+        else observations[-1].amount
+    )
+    return _round(amount, policy)
 
 
 def _dedupe_dates(

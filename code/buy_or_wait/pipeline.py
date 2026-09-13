@@ -153,6 +153,9 @@ def run_phase9_context(
         request_date=request.request_date,
         policy=selected_policy,
         message_evidence=message_run.evidence,
+        user_id=request.user_id,
+        home_currency=context.profile.home_currency,
+        exchange_rates=context.exchange_rates,
     )
     forecast = calculate_baseline_forecast(
         current_available_balance=context.profile.current_available_balance,
@@ -205,6 +208,9 @@ def complete_production_pipeline(
         request_date=request.request_date,
         policy=selected_policy,
         message_evidence=phase9.message_extraction.evidence,
+        user_id=request.user_id,
+        home_currency=context.profile.home_currency,
+        exchange_rates=context.exchange_rates,
     )
     baseline = calculate_baseline_forecast(
         current_available_balance=context.profile.current_available_balance,

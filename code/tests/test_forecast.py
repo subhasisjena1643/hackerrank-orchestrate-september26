@@ -11,9 +11,11 @@ from buy_or_wait.domain import (
     Direction,
     EventStatus,
     EventType,
+    ExchangeRate,
     FinancialEvent,
     Flexibility,
 )
+from buy_or_wait.evidence.schemas import MessageEvidenceItem
 from buy_or_wait.finance.cashflows import (
     CashFlowReason,
     construct_future_cash_flows,
@@ -86,6 +88,40 @@ def test_explicit_future_row_suppresses_inferred_occurrence():
     assert len(projection.suppressed) == 1
 
 
+def test_confirmed_salary_anchor_is_not_double_counted_despite_description_change():
+    rows = [
+        event(
+            "first",
+            date(2026, 3, 15),
+            "60",
+            status=EventStatus.SETTLED,
+            direction=Direction.CREDIT,
+            category="salary",
+            description="Prorated first salary",
+            kind=EventType.INCOME,
+        ),
+        event(
+            "next",
+            date(2026, 4, 15),
+            "100",
+            status=EventStatus.SCHEDULED,
+            direction=Direction.CREDIT,
+            category="salary",
+            description="Next confirmed salary",
+            kind=EventType.INCOME,
+        ),
+    ]
+    projection = construct_future_cash_flows(
+        resolve(rows), request_date=REQUEST, policy=BASELINE_POLICY, horizon_days=60
+    )
+    april = [
+        flow for flow in projection.cash_flows if flow.flow_date == date(2026, 4, 15)
+    ]
+    assert len(april) == 1
+    assert april[0].cash_flow_id == "explicit:next"
+    assert len(projection.suppressed) == 1
+
+
 def test_authoritative_pending_debit_and_confirmed_salary_are_included():
     rows = [
         event("pending", date(2026, 4, 5), "25", status=EventStatus.PENDING),
@@ -116,6 +152,40 @@ def test_authoritative_pending_debit_and_confirmed_salary_are_included():
         ("explicit:pending", Decimal("-25")),
         ("explicit:salary", Decimal("500")),
     ]
+
+
+def test_message_only_confirmed_salary_becomes_one_dated_credit():
+    fact = MessageEvidenceItem(
+        message_id="message_salary",
+        related_event_id=None,
+        fact_type="first_salary_confirmed",
+        amount="100",
+        currency="EUR",
+        effective_date=None,
+        settlement_date=date(2026, 4, 15),
+        recurrence_scope="recurring",
+        cash_state="confirmed_credit",
+        confidence="high",
+        evidence_quote="first salary will be EUR 100",
+        notes="Explicit confirmed first salary.",
+    )
+    projection = construct_future_cash_flows(
+        (),
+        request_date=REQUEST,
+        policy=BASELINE_POLICY,
+        message_evidence=(fact,),
+        user_id="u",
+        home_currency=Currency.USD,
+        exchange_rates=(
+            ExchangeRate(date(2026, 4, 15), Currency.EUR, Currency.USD, Decimal("1.1")),
+        ),
+    )
+    assert len(projection.cash_flows) == 1
+    flow = projection.cash_flows[0]
+    assert flow.cash_flow_id == "message-confirmed:message_salary"
+    assert flow.flow_date == date(2026, 4, 15)
+    assert flow.amount == Decimal("110.0")
+    assert flow.reason_code == CashFlowReason.AUTHORITATIVE_MESSAGE_CREDIT
 
 
 def test_horizon_is_inclusive_and_provenance_is_retained():

@@ -1,14 +1,14 @@
 {
   "composite_score": {
     "components": {
-      "affordability_status_accuracy": 0.76,
-      "earliest_date_accuracy": 0.6,
-      "payment_plan_accuracy": 0.64,
-      "recommended_payment_method_accuracy": 0.84,
-      "safe_amount_normalized_accuracy": 0.828581108122573,
+      "affordability_status_accuracy": 0.84,
+      "earliest_date_accuracy": 0.68,
+      "payment_plan_accuracy": 0.72,
+      "recommended_payment_method_accuracy": 0.92,
+      "safe_amount_normalized_accuracy": 0.9381962318775516,
       "spending_changes_accuracy": 0.92
     },
-    "score": 0.7780033878429006,
+    "score": 0.860368681157143,
     "version": "phase13-composite-v1",
     "weights": {
       "affordability_status_accuracy": 0.15,
@@ -21,8 +21,8 @@
   },
   "policy": {
     "aggregation": "per_occurrence",
-    "amount_estimator": "recent_arithmetic_mean",
-    "amount_rounding": "round_half_up_2",
+    "amount_estimator": "percentile_60",
+    "amount_rounding": "exact_decimal",
     "cadence_anchor": "calendar_day_of_month",
     "history_window": "last_3_supported_cycles",
     "same_day_ordering": "debits_before_credits",
@@ -30,7 +30,7 @@
   },
   "rationale": "Highest non-rejected predeclared composite; deterministic simplicity tie-break applied within exact score ties. No request-specific or label-neighbour rule is used.",
   "schema_version": "selected-global-policy-v1",
-  "sha256": "743bad6adb94c55064191e2888e7cc2c1433d11ae008e6ae04a0cee7cdd5199b",
+  "sha256": "5aeb802c17767f8a361eb4d3f49a448457ecee4d495f6462e2d733ca6dd65b9b",
   "stability_summary": {
     "boundary_cases": {
       "amount_plus_minus_0_01_finite": true,
@@ -41,7 +41,7 @@
       "rounding_stable": true
     },
     "boundary_perturbations_passed": true,
-    "leave_one_out_same_family_rate": 0.88,
-    "leave_one_out_same_policy_rate": 0.88
+    "leave_one_out_same_family_rate": 0.92,
+    "leave_one_out_same_policy_rate": 0.92
   }
 }

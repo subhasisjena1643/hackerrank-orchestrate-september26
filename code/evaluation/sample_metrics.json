@@ -2,18 +2,18 @@
   "grid_hash_sha256": "146384edbccf03e6551558ef070a04932def69b5e6a5a223e7f3e3e698b0ec60",
   "metrics": {
     "affordability_status": {
-      "exact_accuracy": 0.76
+      "exact_accuracy": 0.84
     },
     "composite": {
       "components": {
-        "affordability_status_accuracy": 0.76,
-        "earliest_date_accuracy": 0.6,
-        "payment_plan_accuracy": 0.64,
-        "recommended_payment_method_accuracy": 0.84,
-        "safe_amount_normalized_accuracy": 0.828581108122573,
+        "affordability_status_accuracy": 0.84,
+        "earliest_date_accuracy": 0.68,
+        "payment_plan_accuracy": 0.72,
+        "recommended_payment_method_accuracy": 0.92,
+        "safe_amount_normalized_accuracy": 0.9381962318775516,
         "spending_changes_accuracy": 0.92
       },
-      "score": 0.7780033878429006,
+      "score": 0.860368681157143,
       "version": "phase13-composite-v1",
       "weights": {
         "affordability_status_accuracy": 0.15,
@@ -25,24 +25,24 @@
       }
     },
     "earliest_date_for_full_payment": {
-      "exact_accuracy": 0.6
+      "exact_accuracy": 0.68
     },
     "invariant_pass_rate": 1.0,
     "payment_plan": {
-      "exact_accuracy": 0.64
+      "exact_accuracy": 0.72
     },
     "recommended_payment_method": {
-      "exact_accuracy": 0.84
+      "exact_accuracy": 0.92
     },
     "request_count": 25,
     "safe_amount": {
-      "exact_accuracy": 0.12,
-      "exact_matches": 3,
-      "mae": 174482.4804,
-      "mean_normalized_error": 0.17141889187742695,
+      "exact_accuracy": 0.16,
+      "exact_matches": 4,
+      "mae": 134260.12464,
+      "mean_normalized_error": 0.061803768122448324,
       "tolerance": "0.01",
-      "tolerance_accuracy": 0.12,
-      "tolerance_matches": 3
+      "tolerance_accuracy": 0.16,
+      "tolerance_matches": 4
     },
     "spending_changes_needed": {
       "exact_accuracy": 0.92
@@ -51,11 +51,11 @@
   "per_request_diffs": [
     {
       "actual": {
-        "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "7918.68",
-        "earliest_date_for_full_payment": "",
-        "payment_plan": "none",
-        "recommended_payment_method": "not_recommended",
+        "affordability_status": "affordable_now",
+        "amount_safe_to_pay": "25256",
+        "earliest_date_for_full_payment": "2024-03-03",
+        "payment_plan": "2024-03-03:25256",
+        "recommended_payment_method": "full_payment",
         "spending_changes_needed": "none"
       },
       "expected": {
@@ -67,10 +67,10 @@
         "spending_changes_needed": "none"
       },
       "field_exact": {
-        "affordability_status": false,
-        "earliest_date_for_full_payment": false,
-        "payment_plan": false,
-        "recommended_payment_method": false,
+        "affordability_status": true,
+        "earliest_date_for_full_payment": true,
+        "payment_plan": true,
+        "recommended_payment_method": true,
         "spending_changes_needed": true
       },
       "invariant_pass": true,
@@ -189,15 +189,15 @@
       },
       "request_id": "request_01",
       "requested_amount": "25256",
-      "safe_amount_absolute_error": "17337.32",
-      "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.6864634146341464,
-      "safe_amount_tolerance": false
+      "safe_amount_absolute_error": "0",
+      "safe_amount_exact": true,
+      "safe_amount_normalized_error": 0.0,
+      "safe_amount_tolerance": true
     },
     {
       "actual": {
         "affordability_status": "affordable_with_plan",
-        "amount_safe_to_pay": "18901251.84",
+        "amount_safe_to_pay": "18876182.49",
         "earliest_date_for_full_payment": "2025-09-15",
         "payment_plan": "2025-08-08:15952906.67|2025-09-07:15952906.67|2025-10-07:15952906.67",
         "recommended_payment_method": "installments",
@@ -315,15 +315,15 @@
       },
       "request_id": "request_02",
       "requested_amount": "46018000",
-      "safe_amount_absolute_error": "1672112.64",
+      "safe_amount_absolute_error": "1647043.29",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.036336056325785564,
+      "safe_amount_normalized_error": 0.03579128362814551,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_later",
-        "amount_safe_to_pay": "1176910.48",
+        "amount_safe_to_pay": "1159117.51",
         "earliest_date_for_full_payment": "2019-10-15",
         "payment_plan": "2019-10-15:5491000",
         "recommended_payment_method": "wait",
@@ -430,15 +430,15 @@
       },
       "request_id": "request_03",
       "requested_amount": "5491000",
-      "safe_amount_absolute_error": "303910.48",
+      "safe_amount_absolute_error": "286117.51",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.05534701875796758,
+      "safe_amount_normalized_error": 0.05210663085048261,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_later",
-        "amount_safe_to_pay": "8954174.27",
+        "amount_safe_to_pay": "8474727.246",
         "earliest_date_for_full_payment": "2024-06-15",
         "payment_plan": "2024-06-15:12693000",
         "recommended_payment_method": "wait",
@@ -577,18 +577,18 @@
       },
       "request_id": "request_04",
       "requested_amount": "12693000",
-      "safe_amount_absolute_error": "552374.27",
+      "safe_amount_absolute_error": "72927.246",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.043518023319940126,
+      "safe_amount_normalized_error": 0.005745469628929331,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
-        "affordability_status": "affordable_now",
-        "amount_safe_to_pay": "15488",
-        "earliest_date_for_full_payment": "2025-11-06",
-        "payment_plan": "2025-11-06:15488",
-        "recommended_payment_method": "full_payment",
+        "affordability_status": "not_affordable",
+        "amount_safe_to_pay": "0",
+        "earliest_date_for_full_payment": "",
+        "payment_plan": "none",
+        "recommended_payment_method": "not_recommended",
         "spending_changes_needed": "none"
       },
       "expected": {
@@ -600,10 +600,10 @@
         "spending_changes_needed": "none"
       },
       "field_exact": {
-        "affordability_status": false,
-        "earliest_date_for_full_payment": false,
-        "payment_plan": false,
-        "recommended_payment_method": false,
+        "affordability_status": true,
+        "earliest_date_for_full_payment": true,
+        "payment_plan": true,
+        "recommended_payment_method": true,
         "spending_changes_needed": true
       },
       "invariant_pass": true,
@@ -700,15 +700,15 @@
       },
       "request_id": "request_05",
       "requested_amount": "15488",
-      "safe_amount_absolute_error": "14751",
+      "safe_amount_absolute_error": "737",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.9524147727272727,
+      "safe_amount_normalized_error": 0.04758522727272727,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_with_plan",
-        "amount_safe_to_pay": "616.96",
+        "amount_safe_to_pay": "609.054",
         "earliest_date_for_full_payment": "2026-01-15",
         "payment_plan": "2026-01-03:620.4",
         "recommended_payment_method": "full_payment",
@@ -863,15 +863,15 @@
       },
       "request_id": "request_06",
       "requested_amount": "620.4",
-      "safe_amount_absolute_error": "13.66",
+      "safe_amount_absolute_error": "5.754",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.0220180528691167,
+      "safe_amount_normalized_error": 0.009274661508704062,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_with_plan",
-        "amount_safe_to_pay": "96112.76",
+        "amount_safe_to_pay": "95674.052",
         "earliest_date_for_full_payment": "2024-10-15",
         "payment_plan": "2024-09-12:68432|2024-10-10:68432|2024-11-07:68432",
         "recommended_payment_method": "installments",
@@ -964,15 +964,15 @@
       },
       "request_id": "request_07",
       "requested_amount": "197400",
-      "safe_amount_absolute_error": "8942.20",
+      "safe_amount_absolute_error": "8503.492",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.045299898682877406,
+      "safe_amount_normalized_error": 0.04307746707193516,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "0",
+        "amount_safe_to_pay": "276.45",
         "earliest_date_for_full_payment": "",
         "payment_plan": "none",
         "recommended_payment_method": "not_recommended",
@@ -1110,9 +1110,9 @@
       },
       "request_id": "request_08",
       "requested_amount": "996.6",
-      "safe_amount_absolute_error": "284.57",
+      "safe_amount_absolute_error": "8.12",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.28554083885209713,
+      "safe_amount_normalized_error": 0.008147702187437288,
       "safe_amount_tolerance": false
     },
     {
@@ -1232,8 +1232,8 @@
     {
       "actual": {
         "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "266700",
-        "earliest_date_for_full_payment": "2024-12-06",
+        "amount_safe_to_pay": "0",
+        "earliest_date_for_full_payment": "",
         "payment_plan": "none",
         "recommended_payment_method": "not_recommended",
         "spending_changes_needed": "none"
@@ -1248,7 +1248,7 @@
       },
       "field_exact": {
         "affordability_status": true,
-        "earliest_date_for_full_payment": false,
+        "earliest_date_for_full_payment": true,
         "payment_plan": true,
         "recommended_payment_method": true,
         "spending_changes_needed": true
@@ -1384,9 +1384,9 @@
       },
       "request_id": "request_10",
       "requested_amount": "266700",
-      "safe_amount_absolute_error": "254000",
+      "safe_amount_absolute_error": "12700",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.9523809523809523,
+      "safe_amount_normalized_error": 0.047619047619047616,
       "safe_amount_tolerance": false
     },
     {
@@ -1629,11 +1629,11 @@
     },
     {
       "actual": {
-        "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "0",
-        "earliest_date_for_full_payment": "",
-        "payment_plan": "none",
-        "recommended_payment_method": "not_recommended",
+        "affordability_status": "affordable_now",
+        "amount_safe_to_pay": "941.6",
+        "earliest_date_for_full_payment": "2024-03-07",
+        "payment_plan": "2024-03-07:941.6",
+        "recommended_payment_method": "full_payment",
         "spending_changes_needed": "none"
       },
       "expected": {
@@ -1771,9 +1771,9 @@
       },
       "request_id": "request_13",
       "requested_amount": "941.6",
-      "safe_amount_absolute_error": "433.4",
+      "safe_amount_absolute_error": "508.2",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.4602803738317757,
+      "safe_amount_normalized_error": 0.5397196261682243,
       "safe_amount_tolerance": false
     },
     {
@@ -2194,7 +2194,7 @@
     {
       "actual": {
         "affordability_status": "affordable_with_plan",
-        "amount_safe_to_pay": "244272.69",
+        "amount_safe_to_pay": "243873.464",
         "earliest_date_for_full_payment": "2026-03-15",
         "payment_plan": "2026-03-01:95194.67|2026-03-31:95194.67|2026-04-30:95194.67",
         "recommended_payment_method": "installments",
@@ -2334,15 +2334,15 @@
       },
       "request_id": "request_17",
       "requested_amount": "274600",
-      "safe_amount_absolute_error": "423.11",
+      "safe_amount_absolute_error": "23.884",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.0015408230152949745,
+      "safe_amount_normalized_error": 8.697742170429716e-05,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_later",
-        "amount_safe_to_pay": "562.79",
+        "amount_safe_to_pay": "556.792",
         "earliest_date_for_full_payment": "2026-08-15",
         "payment_plan": "2026-08-15:3246.1",
         "recommended_payment_method": "wait",
@@ -2453,17 +2453,17 @@
       },
       "request_id": "request_18",
       "requested_amount": "3246.1",
-      "safe_amount_absolute_error": "100.79",
+      "safe_amount_absolute_error": "94.792",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.03104956717291519,
+      "safe_amount_normalized_error": 0.029201811404454575,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_with_plan",
-        "amount_safe_to_pay": "18779.22",
+        "amount_safe_to_pay": "18274.044",
         "earliest_date_for_full_payment": "2024-09-15",
-        "payment_plan": "2024-09-04:18779.22|2024-09-15:20880.78",
+        "payment_plan": "2024-09-04:18274.044|2024-09-15:21385.956",
         "recommended_payment_method": "partial_payment",
         "spending_changes_needed": "none"
       },
@@ -2576,15 +2576,15 @@
       },
       "request_id": "request_19",
       "requested_amount": "39660",
-      "safe_amount_absolute_error": "10040.78",
+      "safe_amount_absolute_error": "10545.956",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.2531714573877963,
+      "safe_amount_normalized_error": 0.265909127584468,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "12342.43",
+        "amount_safe_to_pay": "12024.87",
         "earliest_date_for_full_payment": "",
         "payment_plan": "none",
         "recommended_payment_method": "not_recommended",
@@ -2709,9 +2709,9 @@
       },
       "request_id": "request_20",
       "requested_amount": "303700",
-      "safe_amount_absolute_error": "6942.43",
+      "safe_amount_absolute_error": "6624.87",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.02285949950609154,
+      "safe_amount_normalized_error": 0.021813862364175172,
       "safe_amount_tolerance": false
     },
     {
@@ -2830,7 +2830,7 @@
     {
       "actual": {
         "affordability_status": "affordable_with_plan",
-        "amount_safe_to_pay": "447.06",
+        "amount_safe_to_pay": "444.772",
         "earliest_date_for_full_payment": "2025-01-15",
         "payment_plan": "2024-12-08:253.59|2025-01-05:253.59|2025-02-02:253.59",
         "recommended_payment_method": "installments",
@@ -2969,15 +2969,15 @@
       },
       "request_id": "request_22",
       "requested_amount": "731.5",
-      "safe_amount_absolute_error": "28.40",
+      "safe_amount_absolute_error": "30.688",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.038824333561175664,
+      "safe_amount_normalized_error": 0.041952153110047845,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "affordable_later",
-        "amount_safe_to_pay": "3756.41",
+        "amount_safe_to_pay": "3632.342",
         "earliest_date_for_full_payment": "2025-07-15",
         "payment_plan": "2025-07-15:38016",
         "recommended_payment_method": "wait",
@@ -3094,15 +3094,15 @@
       },
       "request_id": "request_23",
       "requested_amount": "38016",
-      "safe_amount_absolute_error": "5395.59",
+      "safe_amount_absolute_error": "5519.658",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.14192945075757576,
+      "safe_amount_normalized_error": 0.145193023989899,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "18140.87",
+        "amount_safe_to_pay": "18013.65",
         "earliest_date_for_full_payment": "",
         "payment_plan": "none",
         "recommended_payment_method": "not_recommended",
@@ -3262,16 +3262,16 @@
       },
       "request_id": "request_24",
       "requested_amount": "109600",
-      "safe_amount_absolute_error": "4720.87",
+      "safe_amount_absolute_error": "4593.65",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.043073631386861315,
+      "safe_amount_normalized_error": 0.04191286496350365,
       "safe_amount_tolerance": false
     },
     {
       "actual": {
         "affordability_status": "not_affordable",
-        "amount_safe_to_pay": "2335183.66",
-        "earliest_date_for_full_payment": "",
+        "amount_safe_to_pay": "2125452.166",
+        "earliest_date_for_full_payment": "2024-05-15",
         "payment_plan": "none",
         "recommended_payment_method": "not_recommended",
         "spending_changes_needed": "none"
@@ -3286,7 +3286,7 @@
       },
       "field_exact": {
         "affordability_status": true,
-        "earliest_date_for_full_payment": true,
+        "earliest_date_for_full_payment": false,
         "payment_plan": true,
         "recommended_payment_method": true,
         "spending_changes_needed": true
@@ -3426,9 +3426,9 @@
       },
       "request_id": "request_25",
       "requested_amount": "60496000",
-      "safe_amount_absolute_error": "910183.66",
+      "safe_amount_absolute_error": "700452.166",
       "safe_amount_exact": false,
-      "safe_amount_normalized_error": 0.01504535275059508,
+      "safe_amount_normalized_error": 0.011578487271885745,
       "safe_amount_tolerance": false
     }
   ],
@@ -3436,18 +3436,17 @@
     "forecast_safe_amount": [
       "request_02",
       "request_04",
+      "request_05",
+      "request_10",
       "request_14",
       "request_15",
       "request_17",
       "request_20",
       "request_22",
       "request_23",
-      "request_24",
-      "request_25"
+      "request_24"
     ],
     "forecast_safe_amount+decision_classification+payment_timing_or_plan": [
-      "request_01",
-      "request_05",
       "request_08",
       "request_13"
     ],
@@ -3459,11 +3458,11 @@
       "request_03",
       "request_06",
       "request_07",
-      "request_10",
       "request_18",
-      "request_19"
+      "request_19",
+      "request_25"
     ]
   },
   "schema_version": "phase13-sample-metrics-v1",
-  "selected_policy_hash": "743bad6adb94c55064191e2888e7cc2c1433d11ae008e6ae04a0cee7cdd5199b"
+  "selected_policy_hash": "5aeb802c17767f8a361eb4d3f49a448457ecee4d495f6462e2d733ca6dd65b9b"
 }

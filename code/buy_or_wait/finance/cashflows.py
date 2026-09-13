@@ -8,7 +8,9 @@ from decimal import Decimal
 from enum import StrEnum
 from typing import Iterable
 
-from buy_or_wait.domain import Direction
+from buy_or_wait.domain import Currency, Direction, EventType, ExchangeRate, Flexibility
+from buy_or_wait.evidence.messages import ExtractedMessageEvidence
+from buy_or_wait.evidence.schemas import MessageEvidenceItem
 from buy_or_wait.finance.lifecycle import (
     ProvenanceKind,
     ResolvedEvent,
@@ -27,12 +29,14 @@ from buy_or_wait.finance.recurrence_policies import (
     SameDayOrdering,
     require_selected_policy,
 )
+from buy_or_wait.money import convert_to_home_currency
 
 
 class CashFlowReason(StrEnum):
     AUTHORITATIVE_FUTURE_EVENT = "authoritative_future_event"
     INFERRED_SUPPORTED_RECURRENCE = "inferred_supported_recurrence"
     EXPLICIT_SUPPRESSES_INFERRED = "explicit_future_row_suppresses_inferred_duplicate"
+    AUTHORITATIVE_MESSAGE_CREDIT = "authoritative_confirmed_message_credit"
 
 
 @dataclass(frozen=True, slots=True)
@@ -82,6 +86,9 @@ def construct_future_cash_flows(
     request_date: date,
     policy: ForecastPolicy | None,
     message_evidence: Iterable[object] = (),
+    user_id: str | None = None,
+    home_currency: Currency | None = None,
+    exchange_rates: Iterable[ExchangeRate] = (),
     horizon_days: int = 90,
 ) -> CashFlowProjection:
     """Combine explicit lifecycle rows and inferred recurrence, fail closed."""
@@ -97,6 +104,17 @@ def construct_future_cash_flows(
         and row.cash_flow_date is not None
         and request_date <= row.cash_flow_date <= end
     ]
+    explicit.extend(
+        _confirmed_message_credits(
+            evidence,
+            request_date=request_date,
+            horizon_end=end,
+            user_id=user_id,
+            home_currency=home_currency,
+            exchange_rates=tuple(exchange_rates),
+            existing=explicit,
+        )
+    )
     inferred_series = infer_recurrence_series(
         rows,
         request_date=request_date,
@@ -158,6 +176,9 @@ def build_future_cash_flows(
     request_date: date,
     policy: ForecastPolicy | None,
     message_evidence: Iterable[object] = (),
+    user_id: str | None = None,
+    home_currency: Currency | None = None,
+    exchange_rates: Iterable[ExchangeRate] = (),
     horizon_days: int = 90,
 ) -> tuple[ProjectedCashFlow, ...]:
     return construct_future_cash_flows(
@@ -165,6 +186,9 @@ def build_future_cash_flows(
         request_date=request_date,
         policy=policy,
         message_evidence=message_evidence,
+        user_id=user_id,
+        home_currency=home_currency,
+        exchange_rates=exchange_rates,
         horizon_days=horizon_days,
     ).cash_flows
 
@@ -219,6 +243,94 @@ def _explicit(row: ResolvedEvent) -> ProjectedCashFlow:
         False,
         _key(row),
     )
+
+
+def _confirmed_message_credits(
+    evidence: tuple[object, ...],
+    *,
+    request_date: date,
+    horizon_end: date,
+    user_id: str | None,
+    home_currency: Currency | None,
+    exchange_rates: tuple[ExchangeRate, ...],
+    existing: list[ProjectedCashFlow],
+) -> tuple[ProjectedCashFlow, ...]:
+    """Materialize only explicitly confirmed, dated message-only salary credits."""
+
+    result: list[ProjectedCashFlow] = []
+    for value in evidence:
+        item = (
+            value.item
+            if isinstance(value, ExtractedMessageEvidence)
+            else value
+            if isinstance(value, MessageEvidenceItem)
+            else None
+        )
+        if item is None or item.fact_type != "first_salary_confirmed":
+            continue
+        if (
+            item.related_event_id is not None
+            or item.cash_state != "confirmed_credit"
+            or item.amount is None
+            or item.currency is None
+            or item.settlement_date is None
+        ):
+            continue
+        if user_id is None or home_currency is None:
+            raise ValueError(
+                "message-confirmed salary requires user_id and home_currency"
+            )
+        when = item.settlement_date
+        if not request_date <= when <= horizon_end:
+            continue
+        currency = Currency(item.currency)
+        amount = convert_to_home_currency(
+            Decimal(item.amount),
+            currency,
+            home_currency,
+            when,
+            exchange_rates,
+            event_id=item.message_id,
+        )
+        if any(
+            flow.direction is Direction.CREDIT
+            and flow.flow_date == when
+            and flow.amount == amount
+            for flow in (*existing, *result)
+        ):
+            continue
+        key = SeriesKey(
+            user_id,
+            Direction.CREDIT,
+            "salary",
+            EventType.INCOME,
+            currency,
+            Flexibility.FIXED,
+            semantic_description_family("Payroll credit", "salary"),
+        )
+        result.append(
+            ProjectedCashFlow(
+                f"message-confirmed:{item.message_id}",
+                when,
+                amount,
+                Direction.CREDIT,
+                "salary",
+                "Confirmed salary from message evidence",
+                (),
+                (item.message_id,),
+                (
+                    ResolutionProvenance(
+                        ProvenanceKind.MESSAGE,
+                        item.message_id,
+                        "explicit confirmed salary credit",
+                    ),
+                ),
+                (CashFlowReason.AUTHORITATIVE_MESSAGE_CREDIT.value,),
+                False,
+                key,
+            )
+        )
+    return tuple(result)
 
 
 def _inferred(item: InferredOccurrence) -> ProjectedCashFlow:
