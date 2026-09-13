@@ -1,0 +1,38 @@
+log.txt
+IMPLEMENTATION_PLAN.md
+BUY_OR_WAIT_PROMPT_PACK.md
+.venv
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Python bytecode and tooling caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Local evidence caches and source-bearing telemetry ledgers
+.evidence_cache/
+evidence_cache/
+**/.evidence_cache/
+**/evidence_cache/
+.telemetry/
+telemetry/
+**/.telemetry/
+**/telemetry/
+*telemetry*.jsonl
+*telemetry*.ndjson
+
+# Temporary outputs and generated submission archive
+*.tmp
+*.temp
+output.tmp.csv
+output.csv.tmp
+code.zip
