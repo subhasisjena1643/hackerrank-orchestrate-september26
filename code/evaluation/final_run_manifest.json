@@ -1,1 +1,3503 @@
-{}
+{
+  "candidate_addition_rule": "A new general hypothesis requires a fresh manifest and complete rerun.",
+  "candidate_count": 384,
+  "composite": {
+    "formula": "weighted sum; safe accuracy = 1 - min(1, mean normalized absolute error)",
+    "version": "phase13-composite-v1",
+    "weights": {
+      "affordability_status_accuracy": 0.15,
+      "earliest_date_accuracy": 0.1,
+      "payment_plan_accuracy": 0.15,
+      "recommended_payment_method_accuracy": 0.15,
+      "safe_amount_normalized_accuracy": 0.35,
+      "spending_changes_accuracy": 0.1
+    }
+  },
+  "created_at": "2026-09-13T09:21:07.248362+00:00",
+  "general_evidence_hypotheses": [
+    {
+      "id": "evidence-message-single-record-v1",
+      "rationale": "Validate ambiguous provider evidence one message at a time to reduce cross-record schema and grounding failures."
+    },
+    {
+      "id": "evidence-explicit-temporary-payroll-v1",
+      "rationale": "Parse explicit currency/amount temporary payroll and next-salary reductions deterministically as one-cycle amendments when the source explicitly names the affected cycle."
+    },
+    {
+      "id": "evidence-confirmed-base-payroll-v1",
+      "rationale": "Parse an explicitly confirmed base salary deterministically as a recurring amendment while never counting an unapproved or unearned commission mentioned in the same message."
+    },
+    {
+      "id": "evidence-explicit-first-salary-v1",
+      "rationale": "Parse an explicit first-salary amount and confirmed credit date deterministically without creating any unsupported event row."
+    },
+    {
+      "id": "evidence-explicit-internal-transfer-v1",
+      "rationale": "Classify an explicitly matched debit and credit between two same-owner accounts as a non-cash internal transfer."
+    },
+    {
+      "id": "evidence-explicit-linked-proceeds-settlement-v1",
+      "rationale": "Treat linked proceeds as settled only when the source explicitly states they reached the account and the claim is closed."
+    }
+  ],
+  "grid_hash_sha256": "146384edbccf03e6551558ef070a04932def69b5e6a5a223e7f3e3e698b0ec60",
+  "policies": [
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "recent_arithmetic_mean",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "median",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "trimmed_mean_20_percent",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "latest_value",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_60",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_2_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_3_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "last_4_supported_cycles",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "per_occurrence",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "median_supported_interval",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "exact_decimal",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "debits_before_credits",
+      "schema_version": "forecast-policy-v1"
+    },
+    {
+      "aggregation": "calendar_period_total",
+      "amount_estimator": "percentile_75",
+      "amount_rounding": "round_half_up_2",
+      "cadence_anchor": "calendar_day_of_month",
+      "history_window": "all_observations_recent_90_days",
+      "same_day_ordering": "credits_before_debits",
+      "schema_version": "forecast-policy-v1"
+    }
+  ],
+  "schema_version": "phase13-policy-grid-v1"
+}

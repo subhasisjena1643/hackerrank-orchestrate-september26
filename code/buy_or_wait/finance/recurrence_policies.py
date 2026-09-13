@@ -12,7 +12,8 @@ from enum import StrEnum
 import hashlib
 import json
 from itertools import product
-from typing import Iterable, Sequence, TypeVar, cast
+from pathlib import Path
+from typing import Iterable, Mapping, Sequence, TypeVar, cast
 
 
 class AmountEstimator(StrEnum):
@@ -222,6 +223,39 @@ def require_selected_policy(policy: ForecastPolicy | None) -> ForecastPolicy:
     return _coerce_policy(policy)
 
 
+def load_selected_policy(path: Path | str) -> ForecastPolicy:
+    """Load and authenticate the frozen production policy artifact only."""
+
+    source = Path(path)
+    try:
+        payload = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("selected policy artifact is not readable JSON") from error
+    if not isinstance(payload, Mapping):
+        raise ValueError("selected policy artifact must be an object")
+    raw = payload.get("policy")
+    expected_hash = payload.get("sha256")
+    if not isinstance(raw, Mapping) or not isinstance(expected_hash, str):
+        raise ValueError("selected policy artifact lacks policy or sha256")
+    try:
+        policy = ForecastPolicy(
+            amount_estimator=AmountEstimator(str(raw["amount_estimator"])),
+            history_window=HistoryWindow(str(raw["history_window"])),
+            aggregation=Aggregation(str(raw["aggregation"])),
+            cadence_anchor=CadenceAnchor(str(raw["cadence_anchor"])),
+            amount_rounding=AmountRounding(str(raw["amount_rounding"])),
+            same_day_ordering=SameDayOrdering(str(raw["same_day_ordering"])),
+            schema_version=str(raw["schema_version"]),
+        )
+    except (KeyError, ValueError, TypeError) as error:
+        raise ValueError("selected policy config is invalid") from error
+    if policy.schema_version != "forecast-policy-v1":
+        raise ValueError("unsupported selected policy schema")
+    if policy.sha256 != expected_hash:
+        raise ValueError("selected policy SHA-256 does not match its config")
+    return policy
+
+
 __all__ = [
     "Aggregation",
     "AmountEstimator",
@@ -235,6 +269,7 @@ __all__ = [
     "SAME_DAY_POLICIES",
     "SameDayOrdering",
     "estimate_amount",
+    "load_selected_policy",
     "require_selected_policy",
     "select_history",
 ]

@@ -459,6 +459,126 @@ def _wrap(
 
 def _obvious_fact(message: MessageRecord) -> MessageEvidenceItem | None:
     text = " ".join(message.message_text.casefold().split())
+    if (
+        re.search(r"\bmatching debit and credit\b", text)
+        and re.search(r"\btransfer between your two accounts\b", text)
+        and not _looks_instruction_like(text)
+    ):
+        return MessageEvidenceItem(
+            message_id=message.message_id,
+            related_event_id=message.related_event_id,
+            fact_type="internal_transfer",
+            amount=None,
+            currency=None,
+            effective_date=None,
+            settlement_date=None,
+            recurrence_scope=None,
+            cash_state="non_cash",
+            confidence="high",
+            evidence_quote=_matching_quote(
+                message.message_text, r"transfer between your two accounts"
+            ),
+            notes="Explicit same-owner internal transfer detected.",
+        )
+    if (
+        message.related_event_id
+        and re.search(r"\b(?:prize )?proceeds have reached your account\b", text)
+        and re.search(r"\bclaim is now closed\b", text)
+        and not _looks_instruction_like(text)
+    ):
+        return MessageEvidenceItem(
+            message_id=message.message_id,
+            related_event_id=message.related_event_id,
+            fact_type="event_settled",
+            amount=None,
+            currency=None,
+            effective_date=None,
+            settlement_date=None,
+            recurrence_scope=None,
+            cash_state="unknown",
+            confidence="high",
+            evidence_quote=_matching_quote(
+                message.message_text, r"proceeds have reached your account"
+            ),
+            notes="Explicit linked proceeds settlement detected.",
+        )
+    temporary_salary = re.search(
+        r"\btemporary\b[^.!?]{0,80}\b(?:pay|salary|payroll)\b[^.!?]{0,40}"
+        r"\b(INR|IDR|USD|EUR|ZAR)\s+([0-9]+(?:\.[0-9]+)?)\b",
+        message.message_text,
+        re.IGNORECASE,
+    ) or re.search(
+        r"\bnext salary\b[^.!?]{0,40}\breduced to\s+"
+        r"(INR|IDR|USD|EUR|ZAR)\s+([0-9]+(?:\.[0-9]+)?)\b",
+        message.message_text,
+        re.IGNORECASE,
+    )
+    if temporary_salary and not _looks_instruction_like(text):
+        scope = (
+            "one_cycle"
+            if re.search(
+                r"\b(?:next payroll|next salary|next payslip|affected pay cycle|this pay cycle)\b",
+                text,
+            )
+            else "recurring"
+        )
+        return MessageEvidenceItem(
+            message_id=message.message_id,
+            related_event_id=message.related_event_id,
+            fact_type="temporary_salary",
+            amount=temporary_salary.group(2),
+            currency=temporary_salary.group(1).upper(),  # type: ignore[arg-type]
+            effective_date=None,
+            settlement_date=None,
+            recurrence_scope=scope,  # type: ignore[arg-type]
+            cash_state="unknown",
+            confidence="high",
+            evidence_quote=temporary_salary.group(0),
+            notes="Explicit temporary payroll amount detected.",
+        )
+    confirmed_base_salary = re.search(
+        r"\b(?:confirmed base salary|gaji pokok yang dikonfirmasi)\b"
+        r"[^.!?]{0,40}\b(INR|IDR|USD|EUR|ZAR)\s+([0-9]+(?:\.[0-9]+)?)\b",
+        message.message_text,
+        re.IGNORECASE,
+    )
+    if confirmed_base_salary and not _looks_instruction_like(text):
+        return MessageEvidenceItem(
+            message_id=message.message_id,
+            related_event_id=message.related_event_id,
+            fact_type="salary_amount_amendment",
+            amount=confirmed_base_salary.group(2),
+            currency=confirmed_base_salary.group(1).upper(),  # type: ignore[arg-type]
+            effective_date=None,
+            settlement_date=None,
+            recurrence_scope="recurring",
+            cash_state="unknown",
+            confidence="high",
+            evidence_quote=confirmed_base_salary.group(0),
+            notes="Explicit confirmed base payroll amount detected.",
+        )
+    first_salary = re.search(
+        r"\bfirst salary\b[^.!?]{0,40}\b(?:will be|is)\s+"
+        r"(INR|IDR|USD|EUR|ZAR)\s+([0-9]+(?:\.[0-9]+)?)\.\s*"
+        r"The confirmed credit date is\s+(\d{4}-\d{2}-\d{2})",
+        message.message_text,
+        re.IGNORECASE,
+    )
+    if first_salary and not _looks_instruction_like(text):
+        return MessageEvidenceItem(
+            message_id=message.message_id,
+            related_event_id=message.related_event_id,
+            fact_type="first_salary_confirmed",
+            amount=first_salary.group(2),
+            currency=first_salary.group(1).upper(),  # type: ignore[arg-type]
+            effective_date=None,
+            settlement_date=date.fromisoformat(first_salary.group(3)),
+            recurrence_scope="recurring",
+            cash_state="confirmed_credit",
+            confidence="high",
+            evidence_quote=first_salary.group(0),
+            notes="Explicit first-salary amount and confirmed credit date detected.",
+        )
     fact_type: MessageFactType | None = None
     cash_state: (
         Literal[

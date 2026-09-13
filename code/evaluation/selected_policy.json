@@ -1,1 +1,47 @@
-{}
+{
+  "composite_score": {
+    "components": {
+      "affordability_status_accuracy": 0.76,
+      "earliest_date_accuracy": 0.6,
+      "payment_plan_accuracy": 0.64,
+      "recommended_payment_method_accuracy": 0.84,
+      "safe_amount_normalized_accuracy": 0.828581108122573,
+      "spending_changes_accuracy": 0.92
+    },
+    "score": 0.7780033878429006,
+    "version": "phase13-composite-v1",
+    "weights": {
+      "affordability_status_accuracy": 0.15,
+      "earliest_date_accuracy": 0.1,
+      "payment_plan_accuracy": 0.15,
+      "recommended_payment_method_accuracy": 0.15,
+      "safe_amount_normalized_accuracy": 0.35,
+      "spending_changes_accuracy": 0.1
+    }
+  },
+  "policy": {
+    "aggregation": "per_occurrence",
+    "amount_estimator": "recent_arithmetic_mean",
+    "amount_rounding": "round_half_up_2",
+    "cadence_anchor": "calendar_day_of_month",
+    "history_window": "last_3_supported_cycles",
+    "same_day_ordering": "debits_before_credits",
+    "schema_version": "forecast-policy-v1"
+  },
+  "rationale": "Highest non-rejected predeclared composite; deterministic simplicity tie-break applied within exact score ties. No request-specific or label-neighbour rule is used.",
+  "schema_version": "selected-global-policy-v1",
+  "sha256": "743bad6adb94c55064191e2888e7cc2c1433d11ae008e6ae04a0cee7cdd5199b",
+  "stability_summary": {
+    "boundary_cases": {
+      "amount_plus_minus_0_01_finite": true,
+      "day_90_inclusive": true,
+      "month_end_anchor": true,
+      "month_end_valid": true,
+      "plus_minus_1_day_boundary_monotonic": true,
+      "rounding_stable": true
+    },
+    "boundary_perturbations_passed": true,
+    "leave_one_out_same_family_rate": 0.88,
+    "leave_one_out_same_policy_rate": 0.88
+  }
+}
